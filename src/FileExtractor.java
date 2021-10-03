@@ -40,9 +40,9 @@ public class FileExtractor {
      */
     public List<City> extractFile(File file) throws IOException {
         String fileContent = readFile(file.getAbsolutePath());
-            int startIndex = fileContent.indexOf("NODE_COORD_SECTION");
-            startIndex = fileContent.indexOf("$", 0) + 1;
-            return extractCities(fileContent.substring(startIndex));
+        int startIndex = fileContent.indexOf("NODE_COORD_SECTION");
+        startIndex = fileContent.indexOf("$", 0) + 1;
+        return extractCities(fileContent.substring(startIndex));
     }
 
     public boolean fileWrite(List<City> cities) {
@@ -85,9 +85,9 @@ public class FileExtractor {
         fileContent = fileContent.replaceAll("\\$", " ");
         String split[] = fileContent.split(" ");
         for (int i = 0; i < split.length; ) {
-            City city = new City(split[i+1],Integer.parseInt(split[i+2]),Integer.parseInt(split[i+3]),10,10);
-            city.id = Integer.parseInt(split[i+0]);
-            i=i+4;
+            City city = new City(split[i + 1], Integer.parseInt(split[i + 2]), Integer.parseInt(split[i + 3]), 10, 10);
+            city.id = Integer.parseInt(split[i + 0]);
+            i = i + 4;
             cities.add(city);
         }
         return cities;

@@ -116,7 +116,6 @@ public class Workspace extends JPanel implements MouseListener, MouseMotionListe
             tspAlgorithm.updateCities(cityClicked, e.getX(), e.getY());
             tspAlgorithm.findRoute();
             cityDrawMode = true;
-            /// repaint();
         }
         pressOut = false;
     }
@@ -139,11 +138,6 @@ public class Workspace extends JPanel implements MouseListener, MouseMotionListe
         TSPCity cityA = tspCities.get(0);
         TSPCity tempCity = cityA;
         TSPCity cityB = null;
-       /* System.out.println("Printing the new route");
-        tspCities.forEach(n -> {
-                    System.out.print(n.name + " ");
-                }
-        );*/
         for (int i = 1; i < tspCities.size(); i++) {
             graphics.setColor(Color.green);
             cityB = tspCities.get(i);

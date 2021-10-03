@@ -25,6 +25,28 @@ public class TSPAlgorithm extends Observable {
             tspRoute.cities.addAll(cityList);
         }
     }
+    public void updateCities(City cityClicked, int x, int y) {
+        if(cityClicked!= null) {
+          /*  tspRoute.cities.forEach(n -> {
+                if(n.name.equals(cityClicked.id+"")) {
+                    n = new TSPCity(cityClicked.id + "", cityClicked.bounds.x, cityClicked.bounds.y);
+                }
+            });*/
+            tspRoute.cities.stream().map(n -> {
+                TSPCity city = null;
+                if(n.name.equals(cityClicked.id+"")) {
+                    city = new TSPCity(cityClicked.id + "", cityClicked.bounds.x, cityClicked.bounds.y);
+                }
+                if(city != null) {
+                    return  city;
+                } else
+                   return n;
+            });
+
+        }
+    }
+
+
 
     public void findRoute() {
         System.out.println("Find route called");

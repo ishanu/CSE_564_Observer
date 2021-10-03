@@ -3,17 +3,18 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 public class Workspace extends JPanel implements MouseListener, MouseMotionListener, Observer {
 
     City cityClicked = null;
+    City previousCity = null;
+    City nextCity = null;
     TSPAlgorithm tspAlgorithm = new TSPAlgorithm();
-    List<City> cities  = new ArrayList<>();
+    List<City> cities  = new LinkedList<>();
     List<TSPCity> tspCities = null;
+
     int preX, preY;
     boolean pressOut= false;
     boolean cityDrawMode = false;
@@ -29,46 +30,50 @@ public class Workspace extends JPanel implements MouseListener, MouseMotionListe
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        if (pressOut) {
-            g2.setColor(Color.WHITE);
-        } else {
-            g2.setColor(Color.RED);
-        }
+
         if (cityDrawMode) {
             for (City city : cities) {
                 city.draw(g2, pressOut);
             }
             drawRoutes(g);
             cityDrawMode = false;
-        }
-        //  phoenix.drawConnect(tempe,g2);
-        //  tempe.draw(g2, pressOut);
-    }
-    private void drawRoutes(Graphics graphics) {
-        tspCities = tspAlgorithm.tspRoute.cities;
-        TSPCity cityA =  tspCities.get(0);
-        TSPCity tempCity = cityA;
-        TSPCity cityB = null;
-        for (int i = 1; i < tspCities.size(); i++) {
-            graphics.setColor(Color.green);
-            cityB = tspCities.get(i);
-            drawLine(graphics, cityA, cityB);
-            cityA = cityB;
-        }
-        graphics.setColor(Color.green);
-        drawLine(graphics, tempCity, cityA);
-    }
+        } else {
+            if (pressOut) {
+              //  g2.setColor(Color.WHITE);
+            } else {
+              //  g2.setColor(Color.RED);
+            }
+            if(previousCity != null) {
+            //    previousCity.drawConnect(cityClicked, g2);
+            }
+            if(nextCity != null) {
+            //    nextCity.drawConnect(cityClicked, g2);
+            }
+            if(cityClicked != null) {
+                cityClicked.draw(g2, pressOut);
+                drawRoutes(g);
+            }
 
 
-    private void drawLine(Graphics g, TSPCity cityA, TSPCity cityB) {
-        City a = cities.get(Integer.parseInt(cityA.name));
-        City b =  cities.get(Integer.parseInt(cityB.name));
-        g.drawLine( a.bounds.x, a.bounds.y, b.bounds.x, b.bounds.y);
+        }
+
     }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        if(pressOut) {
+            cityClicked.move(preX + e.getX(), preY + e.getY());
+            repaint();
+        }
+    }
+
     @Override
     public void mousePressed(MouseEvent e) {
         cityClicked = getCityClicked(e.getX(), e.getY());
+
         if(cityClicked != null) {
+            previousCity = findPreviousCity(cityClicked);
+            nextCity = findNextCity(cityClicked);
             pressOut = true;
             cityClicked.move(preX+e.getX(), preY+e.getY());
 
@@ -108,13 +113,36 @@ public class Workspace extends JPanel implements MouseListener, MouseMotionListe
         }*/
     }
 
-    private City getCityClicked(int x, int y) {
-        for(City city : cities) {
-            if(city.contains(x, y)) {
-                return city;
+    private City findPreviousCity(City cityClicked) {
+        City temp = null;
+        for(TSPCity tspCity : tspCities) {
+            if(cityClicked.id == Integer.parseInt(tspCity.name) ) {
+                return temp;
+            } else {
+                temp = cities.get(Integer.parseInt(tspCity.name));
             }
         }
-        return null;
+        return temp;
+    }
+
+
+
+
+
+    private City findNextCity(City cityClicked) {
+        City temp = null;
+        boolean cityFound = false;
+        for(TSPCity tspCity : tspCities) {
+            if(cityFound) {
+                temp = cities.get(Integer.parseInt(tspCity.name));
+            }
+            if(cityClicked.id == Integer.parseInt(tspCity.name) ) {
+                cityFound = true;
+            } else {
+                temp = null;
+            }
+        }
+        return temp;
     }
 
     @Override
@@ -124,27 +152,50 @@ public class Workspace extends JPanel implements MouseListener, MouseMotionListe
     }
 
     @Override
-    public void mouseDragged(MouseEvent e) {
-
-      /*  if(pressOut) {
-            tempe.move(preX + e.getX(), preY + e.getY());
-            repaint();
-        }*/
-    }
-
-    @Override
     public void mouseReleased(MouseEvent e) {
 
-     /*   if (tempe.contains(e.getX(), e.getY())) {
-            tempe.move(e.getY(), e.getY());
+       if (cityClicked!= null) {
+           tspAlgorithm.updateCities(cityClicked,e.getX(),e.getY());
+            tspAlgorithm.findRoute();
+            cityDrawMode = true;
             pressOut = false;
-            repaint();
+           /// repaint();
 
         } else {
             pressOut = false;
-        }*/
+        }
     }
 
+    private City getCityClicked(int x, int y) {
+        for(City city : cities) {
+            if(city.contains(x, y)) {
+                return city;
+            }
+        }
+        return null;
+    }
+
+    private void drawRoutes(Graphics graphics) {
+        tspCities = tspAlgorithm.tspRoute.cities;
+        TSPCity cityA =  tspCities.get(0);
+        TSPCity tempCity = cityA;
+        TSPCity cityB = null;
+        for (int i = 1; i < tspCities.size(); i++) {
+            graphics.setColor(Color.green);
+            cityB = tspCities.get(i);
+            drawLine(graphics, cityA, cityB);
+            cityA = cityB;
+        }
+        graphics.setColor(Color.green);
+        drawLine(graphics, tempCity, cityA);
+    }
+
+
+    private void drawLine(Graphics g, TSPCity cityA, TSPCity cityB) {
+        City a = cities.get(Integer.parseInt(cityA.name));
+        City b =  cities.get(Integer.parseInt(cityB.name));
+        g.drawLine( a.bounds.x, a.bounds.y, b.bounds.x, b.bounds.y);
+    }
     @Override
     public void mouseClicked(MouseEvent e) {
 

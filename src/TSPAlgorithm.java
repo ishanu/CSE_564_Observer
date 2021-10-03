@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Observable;
 
@@ -16,12 +17,12 @@ public class TSPAlgorithm extends Observable {
 
     public void setCities(List<City> cities) {
         if(cities!= null) {
-            List<TSPCity> cityList = new ArrayList<>();
+            List<TSPCity> cityList = new LinkedList<>();
             cities.forEach(n -> {
                 cityList.add(new TSPCity(n.id + "", n.bounds.x, n.bounds.y));
             });
             tspRoute = new TSPRoute();
-            tspRoute.cities = new ArrayList<>();
+            tspRoute.cities = new LinkedList<>();
             tspRoute.cities.addAll(cityList);
         }
     }
@@ -66,6 +67,12 @@ public class TSPAlgorithm extends Observable {
             initialTemperature*=1-COOLING_RATE;
         }
 
+        System.out.println("Printing the route");
+        shortestRoute.cities.forEach( n-> {
+            System.out.print(n.name+ " ");
+                }
+
+        );
         System.out.println("Notified obeservers");
         setChanged();
         notifyObservers();
@@ -73,7 +80,7 @@ public class TSPAlgorithm extends Observable {
 
     private TSPRoute createTspRoute(TSPRoute tspRoute) {
         TSPRoute route = new TSPRoute();
-        route.cities = new ArrayList<>();
+        route.cities = new LinkedList<>();
         route.cities.addAll(tspRoute.cities);
         return route;
     }

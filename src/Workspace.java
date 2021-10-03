@@ -104,34 +104,6 @@ public class Workspace extends JPanel implements MouseListener, MouseMotionListe
         menuBar.add(saveMenuItem);
     }
 
-    private City findPreviousCity(City cityClicked) {
-        City temp = null;
-        for (TSPCity tspCity : tspCities) {
-            if (cityClicked.id == Integer.parseInt(tspCity.name)) {
-                return temp;
-            } else {
-                temp = cities.get(Integer.parseInt(tspCity.name));
-            }
-        }
-        return temp;
-    }
-
-    private City findNextCity(City cityClicked) {
-        City temp = null;
-        boolean cityFound = false;
-        for (TSPCity tspCity : tspCities) {
-            if (cityFound) {
-                temp = cities.get(Integer.parseInt(tspCity.name));
-            }
-            if (cityClicked.id == Integer.parseInt(tspCity.name)) {
-                cityFound = true;
-            } else {
-                temp = null;
-            }
-        }
-        return temp;
-    }
-
     @Override
     public void update(Observable o, Object arg) {
         System.out.println("Update called");
@@ -167,11 +139,11 @@ public class Workspace extends JPanel implements MouseListener, MouseMotionListe
         TSPCity cityA = tspCities.get(0);
         TSPCity tempCity = cityA;
         TSPCity cityB = null;
-        System.out.println("Printing the new route");
+       /* System.out.println("Printing the new route");
         tspCities.forEach(n -> {
                     System.out.print(n.name + " ");
                 }
-        );
+        );*/
         for (int i = 1; i < tspCities.size(); i++) {
             graphics.setColor(Color.green);
             cityB = tspCities.get(i);

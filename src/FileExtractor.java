@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * This class deals with file management. It opens and reads the TSP files.
@@ -45,7 +44,6 @@ public class FileExtractor {
             startIndex = fileContent.indexOf("$", 0) + 1;
             return extractCities(fileContent.substring(startIndex));
     }
-
 
     public boolean fileWrite(List<City> cities) {
         String content = "id city latitude longitude\n";
@@ -110,27 +108,4 @@ public class FileExtractor {
             return fileContent;
         }
     }
-
-    private List<double[]> getAtspCoordinates(int[][] distanceMatrix, int numColumns, int maxValue) {
-        List<double[]> cityCoordinates = new ArrayList<>();
-        double[] cityLocation = new double[3];
-        Random rand = new Random();
-        int upperBound = numColumns - 1;
-        int k = rand.nextInt(upperBound);
-        cityLocation[0] = k + 1;
-        cityLocation[1] = 1;
-        cityLocation[2] = 1;
-        cityCoordinates.add(cityLocation);
-        for (int i = 0; i <= numColumns - 1; i++) {
-            cityLocation = new double[3];
-            if (i != k) {
-                cityLocation[0] = i + 1;
-                cityLocation[1] = distanceMatrix[k][i];
-                cityLocation[2] = rand.nextInt(maxValue - 1);
-                cityCoordinates.add(cityLocation);
-            }
-        }
-        return cityCoordinates;
-    }
-
 }

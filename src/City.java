@@ -33,14 +33,7 @@ public class City {
         bounds.y = y;
     }
 
-    public void drawConnect(City b, Graphics2D g) {
-        g.drawLine(this.center().x,this.center().y, b.center().x,b.center().y);
-    }
-
     public boolean contains(int x, int y) {
-        System.out.println("region range x :" +  (bounds.x-3) +" " + (bounds.x + bounds.w+3));
-        System.out.println("region range y :" +  (bounds.y-3) +" " + (bounds.y + bounds.h+3));
-        System.out.println("mouse clicked :" +  x + " " + y);
       if((bounds.x-3 <= x && bounds.x+3 + bounds.w >= x) &&
         (bounds.y -3 <= y   && bounds.y +3 + bounds.h >= y)) {
           return  true;
@@ -49,7 +42,5 @@ public class City {
     private Point center() {
         return new Point(bounds.x+bounds.w/2,bounds.y + bounds.h/2);
     }
-
-
 
 }

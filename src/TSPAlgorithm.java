@@ -14,8 +14,12 @@ public class TSPAlgorithm extends Observable {
     public static final double COOLING_RATE = 0.005;
     public static final double TEMP_MIN = 0.99;
     public TSPRoute tspRoute;
-    TSPRoute shortestRoute;
+    public TSPRoute shortestRoute;
 
+    /**
+     * Initializes the cities on which the TSP need to run
+     * @param cities list of cities on which the TSP need to run
+     */
     public void setCities(List<City> cities) {
         if (cities != null) {
             List<TSPCity> cityList = new LinkedList<>();
@@ -28,6 +32,12 @@ public class TSPAlgorithm extends Observable {
         }
     }
 
+    /**
+     * Updates the city that has been moved with the new coordinates
+     * @param cityClicked the city that needs to update
+     * @param x contains the x coordinate
+     * @param y contains the y coordinate
+     */
     public void updateCities(City cityClicked, int x, int y) {
         if (cityClicked != null) {
             tspRoute.cities.stream().map(n -> {
@@ -48,11 +58,13 @@ public class TSPAlgorithm extends Observable {
     }
 
 
+    /**
+     * This method  calculates the TSP and fetches the shortest route
+     */
     public void findRoute() {
         System.out.println("Find route called");
         shortestRoute = createTspRoute(tspRoute);
         TSPRoute adjacentRoute;
-        int breakEven = 0;
         int initialTemperature = 999;
         while (initialTemperature > TEMP_MIN) {
             TSPRoute route = createTspRoute(tspRoute);

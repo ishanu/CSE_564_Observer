@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class deals with file management. It opens and reads the TSP files.
- * It provides methods to extract the TSP and ATSP data for further operations.
+ * This class deals with file management.
+ * It provides features to read and write city coordinates from and into the text file
  *
  * @author : Ishanu Dhar (ID: 1222326326, idhar@asu.edu)
  * @author : Pritam De (ID: 1219491988, pritamde@asu.edu)
@@ -40,11 +40,15 @@ public class FileExtractor {
      */
     public List<City> extractFile(File file) throws IOException {
         String fileContent = readFile(file.getAbsolutePath());
-        int startIndex = fileContent.indexOf("NODE_COORD_SECTION");
-        startIndex = fileContent.indexOf("$", 0) + 1;
+        int startIndex = fileContent.indexOf("$", 0) + 1;
         return extractCities(fileContent.substring(startIndex));
     }
 
+    /**
+     * This class writes the city coordinates into the text file
+     * @param cities list of cities whose coordinates need to be written
+     * @return returns a boolean to check if the write operation has been successful
+     */
     public boolean fileWrite(List<City> cities) {
         String content = "id city latitude longitude\n";
         for (City city : cities) {
@@ -75,10 +79,10 @@ public class FileExtractor {
     }
 
     /**
-     * This method extracts TSP data from the file string.
+     * This method extracts city information from the file string.
      *
      * @param fileContent: a stream of data read from the file
-     * @return a list of locations along with the coordinates.
+     * @return a list of cities along with the coordinates.
      */
     public List<City> extractCities(String fileContent) {
         List<City> cities = new ArrayList<>();

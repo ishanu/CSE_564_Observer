@@ -11,6 +11,10 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
+/**
+ * This class provides the drawing area for the cities and routes.
+ * It observes the TSP algorithm to render the routes among the cities
+ */
 public class Workspace extends JPanel implements MouseListener, MouseMotionListener, Observer {
 
     City cityClicked = null;
@@ -22,6 +26,9 @@ public class Workspace extends JPanel implements MouseListener, MouseMotionListe
     boolean pressOut = false;
     boolean cityDrawMode = false;
 
+    /**
+     * This constructor initializes the drawing area, sets up the menu
+     */
     public Workspace() {
         fileExtractor = new FileExtractor();
         this.setLayout(new BorderLayout());
@@ -32,27 +39,35 @@ public class Workspace extends JPanel implements MouseListener, MouseMotionListe
         tspAlgorithm.addObserver(this);
     }
 
+
+    /**
+     * This is a painting method where cities and routes are drawn.
+     * @param g the graphics component
+     */
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         if (cityDrawMode) {
             for (City city : cities) {
-                city.draw(g2, pressOut);
+                city.draw(g2);
             }
             drawRoutes(g);
             cityDrawMode = false;
         } else {
             if (cityClicked != null) {
                 for (City city : cities) {
-                    city.draw(g2, pressOut);
+                    city.draw(g2);
                 }
-                cityClicked.draw(g2, pressOut);
                 drawRoutes(g);
             }
         }
 
     }
 
+    /**
+     * This method moves the city whenever drag event is triggered
+     * @param e mouse event
+     */
     @Override
     public void mouseDragged(MouseEvent e) {
         if (pressOut) {
@@ -61,13 +76,15 @@ public class Workspace extends JPanel implements MouseListener, MouseMotionListe
         }
     }
 
+    /**
+     * This method will either add a new city or picks an existing whenever press event is triggered
+     * @param e mouse event
+     */
     @Override
     public void mousePressed(MouseEvent e) {
         cityClicked = getCityClicked(e.getX(), e.getY());
         if (cityClicked != null) {
             pressOut = true;
-            cityClicked.move(preX + e.getX(), preY + e.getY());
-
         } else {
             String cityName = JOptionPane.showInputDialog(this,
                     "Enter the city?", null);
@@ -87,7 +104,77 @@ public class Workspace extends JPanel implements MouseListener, MouseMotionListe
         }
     }
 
-    private void setMenuBar() {
+    /**
+     * This methods is triggered whenever the observable notifies the observers
+     * @param o observed object
+     * @param arg arguments from the observed object
+     */
+    @Override
+    public void update(Observable o, Object arg) {
+        System.out.println("Update called");
+        repaint();
+    }
+
+    /**
+     * This method updates the new route whenever release event is triggered
+     * @param e mouse event
+     */
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        if (cityClicked != null) {
+            tspAlgorithm.updateCities(cityClicked, e.getX(), e.getY());
+            tspAlgorithm.findRoute();
+            cityDrawMode = true;
+        }
+        pressOut = false;
+    }
+
+    /**
+     * This method handles the event when the new menu option is clicked
+     * @return event associated the new option
+     */
+    public ActionListener getProjectNewController() {
+        return e -> {
+            this.cities = new LinkedList<>();
+            this.cityClicked = null;
+            repaint();
+        };
+    }
+
+    /**
+     * This method handles the event when the open file option is clicked
+     * @return event associated with the open option
+     */
+    public ActionListener getFileOpenController() {
+        return e -> {
+            try {
+                File file = fileExtractor.openFile();
+                cities = fileExtractor.extractFile(file);
+                this.cityDrawMode = true;
+                tspAlgorithm.setCities(cities);
+                tspAlgorithm.findRoute();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+
+            }
+        };
+    }
+
+    /**
+     * This method handles the event when the save file option is clicked
+     * @return event associated with the save option
+     */
+    public ActionListener getFileSaveController() {
+        return e -> {
+            fileExtractor.fileWrite(this.cities);
+
+        };
+    }
+
+    /**
+     * Sets up the menu bar for the workspace
+     */
+    public void setMenuBar() {
         JMenuBar menuBar = new JMenuBar();
         add(menuBar, BorderLayout.NORTH);
         JMenuItem newMenuItem = new JMenuItem("New");
@@ -102,22 +189,6 @@ public class Workspace extends JPanel implements MouseListener, MouseMotionListe
         menuBar.add(newMenuItem);
         menuBar.add(openMenuItem);
         menuBar.add(saveMenuItem);
-    }
-
-    @Override
-    public void update(Observable o, Object arg) {
-        System.out.println("Update called");
-        repaint();
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        if (cityClicked != null) {
-            tspAlgorithm.updateCities(cityClicked, e.getX(), e.getY());
-            tspAlgorithm.findRoute();
-            cityDrawMode = true;
-        }
-        pressOut = false;
     }
 
     private City getCityClicked(int x, int y) {
@@ -155,34 +226,6 @@ public class Workspace extends JPanel implements MouseListener, MouseMotionListe
         g.drawLine(a.bounds.x, a.bounds.y, b.bounds.x, b.bounds.y);
     }
 
-    private ActionListener getProjectNewController() {
-        return e -> {
-            this.cities = new LinkedList<>();
-            this.cityClicked = null;
-            repaint();
-        };
-    }
-    private ActionListener getFileOpenController() {
-        return e -> {
-            try {
-               File file = fileExtractor.openFile();
-               cities = fileExtractor.extractFile(file);
-               this.cityDrawMode = true;
-               tspAlgorithm.setCities(cities);
-               tspAlgorithm.findRoute();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-
-            }
-        };
-    }
-    private ActionListener getFileSaveController() {
-        return e -> {
-            fileExtractor.fileWrite(this.cities);
-
-        };
-    }
-
     @Override
     public void mouseClicked(MouseEvent e) {
     }
@@ -194,8 +237,6 @@ public class Workspace extends JPanel implements MouseListener, MouseMotionListe
     @Override
     public void mouseExited(MouseEvent e) {
     }
-
-
     @Override
     public void mouseMoved(MouseEvent e) {
     }

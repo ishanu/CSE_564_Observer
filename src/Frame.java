@@ -3,9 +3,8 @@ import java.awt.*;
 
 
 /**
- * This class creates the panel to hold the buttons as well as the drawing area.
+ * This class creates the panel to the main drawing area.
  * It extends JFrame and sets the layout of its contents.
- * It also implements ActionListener to handle control events.
  * @author : Ishanu Dhar (ID: 1222326326, idhar@asu.edu)
  * @author : Pritam De (ID: 1219491988, pritamde@asu.edu)
  */

@@ -45,6 +45,25 @@ public class FileExtractor {
     }
 
     /**
+     * This method extracts city information from the file string.
+     *
+     * @param fileContent: a stream of data read from the file
+     * @return a list of cities along with the coordinates.
+     */
+    public List<City> extractCities(String fileContent) {
+        List<City> cities = new ArrayList<>();
+        fileContent = fileContent.replaceAll("\\$", " ");
+        String split[] = fileContent.split(" ");
+        for (int i = 0; i < split.length; ) {
+            City city = new City(split[i + 1], Integer.parseInt(split[i + 2]), Integer.parseInt(split[i + 3]), 10, 10);
+            city.id = Integer.parseInt(split[i + 0]);
+            i = i + 4;
+            cities.add(city);
+        }
+        return cities;
+    }
+
+    /**
      * This class writes the city coordinates into the text file
      * @param cities list of cities whose coordinates need to be written
      * @return returns a boolean to check if the write operation has been successful
@@ -78,24 +97,6 @@ public class FileExtractor {
         return true;
     }
 
-    /**
-     * This method extracts city information from the file string.
-     *
-     * @param fileContent: a stream of data read from the file
-     * @return a list of cities along with the coordinates.
-     */
-    public List<City> extractCities(String fileContent) {
-        List<City> cities = new ArrayList<>();
-        fileContent = fileContent.replaceAll("\\$", " ");
-        String split[] = fileContent.split(" ");
-        for (int i = 0; i < split.length; ) {
-            City city = new City(split[i + 1], Integer.parseInt(split[i + 2]), Integer.parseInt(split[i + 3]), 10, 10);
-            city.id = Integer.parseInt(split[i + 0]);
-            i = i + 4;
-            cities.add(city);
-        }
-        return cities;
-    }
 
     private String readFile(String path) throws IOException {
         File file = new File(path);

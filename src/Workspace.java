@@ -17,14 +17,13 @@ import java.util.Observer;
  */
 public class Workspace extends JPanel implements MouseListener, MouseMotionListener, Observer {
 
-    City cityClicked = null;
-    TSPAlgorithm tspAlgorithm = new TSPAlgorithm();
-    List<City> cities = new LinkedList<>();
-    List<TSPCity> tspCities = null;
-    int preX, preY;
-    FileExtractor fileExtractor = null;
-    boolean pressOut = false;
-    boolean cityDrawMode = false;
+    private City cityClicked = null;
+    private TSPAlgorithm tspAlgorithm = new TSPAlgorithm();
+    private List<City> cities = new LinkedList<>();
+    private List<TSPCity> tspCities = null;
+    private FileExtractor fileExtractor = null;
+    private boolean pressOut = false;
+    private boolean cityDrawMode = false;
 
     /**
      * This constructor initializes the drawing area, sets up the menu
@@ -71,7 +70,7 @@ public class Workspace extends JPanel implements MouseListener, MouseMotionListe
     @Override
     public void mouseDragged(MouseEvent e) {
         if (pressOut) {
-            cityClicked.move(preX + e.getX(), preY + e.getY());
+            cityClicked.move( e.getX(), e.getY());
             repaint();
         }
     }
@@ -149,6 +148,9 @@ public class Workspace extends JPanel implements MouseListener, MouseMotionListe
         return e -> {
             try {
                 File file = fileExtractor.openFile();
+                if(file == null) {
+                    return;
+                }
                 cities = fileExtractor.extractFile(file);
                 this.cityDrawMode = true;
                 tspAlgorithm.setCities(cities);
@@ -180,9 +182,9 @@ public class Workspace extends JPanel implements MouseListener, MouseMotionListe
         JMenuItem newMenuItem = new JMenuItem("New");
         JMenuItem openMenuItem = new JMenuItem("Open");
         JMenuItem saveMenuItem = new JMenuItem("Save");
-        saveMenuItem.setMaximumSize(saveMenuItem.getPreferredSize());
-        newMenuItem.setMaximumSize(newMenuItem.getPreferredSize());
-        openMenuItem.setMaximumSize(openMenuItem.getPreferredSize());
+        newMenuItem.setMaximumSize(new Dimension(100, 100));
+        openMenuItem.setMaximumSize(new Dimension(100, 100));
+        saveMenuItem.setMaximumSize(new Dimension(100, 100));
         newMenuItem.addActionListener(this.getProjectNewController());
         openMenuItem.addActionListener(this.getFileOpenController());
         saveMenuItem.addActionListener(this.getFileSaveController());

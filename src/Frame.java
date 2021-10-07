@@ -10,6 +10,7 @@ import java.awt.*;
  */
 public class Frame extends JFrame  {
 
+    private Workspace workspace ;
     public Frame() {
         super("Assignment 3");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -20,7 +21,7 @@ public class Frame extends JFrame  {
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
-        Workspace workspace = new Workspace();
+        workspace = new Workspace();
         workspace.setSize(500, 500);
         add(workspace, BorderLayout.CENTER);
         this.setVisible(true);

@@ -29,6 +29,12 @@ public class TSPAlgorithm extends Observable {
             tspRoute = new TSPRoute();
             tspRoute.cities = new LinkedList<>();
             tspRoute.cities.addAll(cityList);
+            if (cities.size() > 1) {
+                findRoute();
+            } else {
+                setChanged();
+                notifyObservers();
+            }
         }
     }
 

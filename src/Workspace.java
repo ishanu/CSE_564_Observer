@@ -93,11 +93,6 @@ public class Workspace extends JPanel implements MouseListener, MouseMotionListe
                 cities.add(city);
                 cityDrawMode = true;
                 tspAlgorithm.setCities(cities);
-                if (cities.size() > 1) {
-                    tspAlgorithm.findRoute();
-                } else {
-                    repaint();
-                }
             }
             pressOut = false;
         }

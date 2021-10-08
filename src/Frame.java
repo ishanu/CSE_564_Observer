@@ -25,7 +25,6 @@ public class Frame extends JFrame  {
         workspace.setSize(500, 500);
         add(workspace, BorderLayout.CENTER);
         this.setVisible(true);
-        workspace.repaint();
     }
 
 }

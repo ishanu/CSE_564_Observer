@@ -17,19 +17,20 @@ import java.util.Observer;
  */
 public class Workspace extends JPanel implements MouseListener, MouseMotionListener, Observer {
 
-    private City cityClicked = null;
-    private TSPAlgorithm tspAlgorithm = new TSPAlgorithm();
+    private TSPAlgorithm tspAlgorithm ;
     private List<City> cities = new LinkedList<>();
     private List<TSPCity> tspCities = null;
-    private FileExtractor fileExtractor = null;
+    private FileExtractor fileExtractor;
     private boolean pressOut = false;
     private boolean cityDrawMode = false;
+    private City cityClicked = null;
 
     /**
      * This constructor initializes the drawing area, sets up the menu
      */
     public Workspace() {
         fileExtractor = new FileExtractor();
+        tspAlgorithm = new TSPAlgorithm();
         this.setLayout(new BorderLayout());
         setMenuBar();
         this.setBackground(Color.WHITE);
@@ -106,6 +107,7 @@ public class Workspace extends JPanel implements MouseListener, MouseMotionListe
     @Override
     public void update(Observable o, Object arg) {
         System.out.println("Update called");
+        this.tspCities = (List<TSPCity>)arg;
         repaint();
     }
 
@@ -200,8 +202,6 @@ public class Workspace extends JPanel implements MouseListener, MouseMotionListe
     private void drawRoutes(Graphics graphics) {
         if (tspAlgorithm.tspRoute.cities.size() <= 1) {
             tspCities = tspAlgorithm.tspRoute.cities;
-        } else {
-            tspCities = tspAlgorithm.shortestRoute.cities;
         }
         TSPCity cityA = tspCities.get(0);
         TSPCity tempCity = cityA;

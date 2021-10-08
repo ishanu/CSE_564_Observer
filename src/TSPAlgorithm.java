@@ -14,7 +14,6 @@ public class TSPAlgorithm extends Observable {
     public static final double COOLING_RATE = 0.005;
     public static final double TEMP_MIN = 0.99;
     public TSPRoute tspRoute;
-    public TSPRoute shortestRoute;
 
     /**
      * Initializes the cities on which the TSP need to run
@@ -69,7 +68,7 @@ public class TSPAlgorithm extends Observable {
      */
     public void findRoute() {
         System.out.println("Find route called");
-        shortestRoute = createTspRoute(tspRoute);
+        TSPRoute shortestRoute = createTspRoute(tspRoute);
         TSPRoute adjacentRoute;
         int initialTemperature = 999;
         while (initialTemperature > TEMP_MIN) {
@@ -91,7 +90,7 @@ public class TSPAlgorithm extends Observable {
         );
         System.out.println("Notified obeservers");
         setChanged();
-        notifyObservers();
+        notifyObservers(shortestRoute.cities);
     }
 
     private TSPRoute createTspRoute(TSPRoute tspRoute) {

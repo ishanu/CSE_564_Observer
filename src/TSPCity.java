@@ -1,3 +1,6 @@
+/**
+ * This class provides the city model on which the TSP algorithm needs to run
+ */
 public class TSPCity {
     private static final double EARTH_EQ_RAD = 6378.1370D;
     private static final double DEG_TO_RAD = Math.PI/180D;
@@ -20,9 +23,9 @@ public class TSPCity {
     }
 
     /**
-     * This method measures the distance from one point to another
-     * @param city: city object for which the distance needs to be found
-     * @return the distance between two cities.
+     * This method measures the distance between the calling city and the parameter city
+     * @param city the location from which the distance needs to be calculated
+     * @return the distance value
      */
     public double measureDistance(TSPCity city) {
         double delLongitude = (city.longitude - this.longitude);

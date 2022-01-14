@@ -10,6 +10,10 @@ import java.util.List;
 public class TSPRoute {
     public List<TSPCity> cities;
 
+    /**
+     * gets the total distance between the cities
+     * @return the total distance
+     */
     public double getTotalDistance() {
         int citiesSize = this.cities.size();
         return (int) (this.cities.stream().mapToDouble(x->{
